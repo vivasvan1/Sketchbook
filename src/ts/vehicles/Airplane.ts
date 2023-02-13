@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as CANNON from 'cannon';
+import * as CANNON from 'cannon-es';
 
 import { Vehicle } from './Vehicle';
 import { IControllable } from '../interfaces/IControllable';
@@ -40,8 +40,6 @@ export class Airplane extends Vehicle implements IControllable, IWorldEntity
 		});
 
 		this.readAirplaneData(gltf);
-
-		this.collision.preStep = (body: CANNON.Body) => { this.physicsPreStep(body, this); };
 
 		this.actions = {
 			'throttle': new KeyBinding('ShiftLeft'),

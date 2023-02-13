@@ -1,4 +1,4 @@
-import * as CANNON from 'cannon';
+import * as CANNON from 'cannon-es';
 import * as THREE from 'three';
 import * as Utils from '../../core/FunctionLibrary';
 import { ICollider } from '../../interfaces/ICollider';
@@ -28,20 +28,23 @@ export class ConvexCollider implements ICollider
 		mat.friction = options.friction;
 		// mat.restitution = 0.7;
 
-		if (this.mesh.geometry.isBufferGeometry)
-		{
-			this.mesh.geometry = new THREE.Geometry().fromBufferGeometry(this.mesh.geometry);
+		const vertices = []
+		const faces: number[][] = []
+		
+		const positions = this.mesh.geometry.getAttribute('position').array;
+		for (let i = 0; i < positions.array.length; i + 3) {
+			vertices.push(new Vector3(positions[i], positions[i + 1], positions[i + 2]))
+			faces.push([i, i + 1, i + 2])
 		}
 
-		let cannonPoints = this.mesh.geometry.vertices.map((v: Vector3) => {
-			return new CANNON.Vec3( v.x, v.y, v.z );
-		});
-		
-		let cannonFaces = this.mesh.geometry.faces.map((f: any) => {
-			return [f.a, f.b, f.c];
+		let cannonPoints = vertices.map((v: Vector3) => {
+			return new CANNON.Vec3(v.x, v.y, v.z);
 		});
 
-		let shape = new CANNON.ConvexPolyhedron(cannonPoints, cannonFaces);
+		let cannonFaces = faces
+
+
+		let shape = new CANNON.ConvexPolyhedron({vertices:cannonPoints, faces:cannonFaces});
 		// shape.material = mat;
 
 		// Add phys sphere
