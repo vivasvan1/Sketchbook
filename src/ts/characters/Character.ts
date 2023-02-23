@@ -978,7 +978,7 @@ export class Character extends THREE.Object3D implements IWorldEntity
 				this.physicsPreStep(this.characterCapsule.body, this);
 			}
 			this.postStep =() => {
-				this.physicsPreStep(this.characterCapsule.body, this);
+				this.physicsPostStep(this.characterCapsule.body, this);
 			}
 			this.world.physicsWorld.addEventListener("preStep", this.preStep);
 			this.world.physicsWorld.addEventListener("postStep", this.postStep);
